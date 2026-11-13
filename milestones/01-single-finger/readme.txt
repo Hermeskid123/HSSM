@@ -31,6 +31,17 @@ Verification
 
 Implemented CPU diagnostic
 --------------------------
+Conda alternative (run from the repository root):
+    conda env create -f environment.yml
+    conda activate hssm
+    PYTHONPATH=src python -m pytest -q
+    PYTHONPATH=src python -m hssm.milestone1 --per-class 100 --output outputs/milestone1
+
+The Conda environment uses Python 3.12 and installs the pinned CPU/headless
+dependencies from requirements.txt with pip. No GPU or display is required.
+To refresh an existing environment after requirements change:
+    conda env update -n hssm -f environment.yml --prune
+
 Linux / Python 3.12, from the repository root:
     python3 -m venv .venv
     .venv/bin/python -m pip install -r requirements.txt
