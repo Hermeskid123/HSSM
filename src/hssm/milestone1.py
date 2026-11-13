@@ -12,6 +12,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from .contours import resample_arc
+
 LABELS = ('extended', 'folded')
 
 
@@ -75,11 +77,7 @@ def select_arc(contour, endpoints):
 def normalize(arc, samples=128):
     """Equal arc-length samples in endpoint frame; retain height/base-width."""
     arc = np.asarray(arc, dtype=float)
-    distance = np.r_[0., np.cumsum(np.linalg.norm(np.diff(arc,axis=0),axis=1))]
-    if samples < 2 or distance[-1] == 0:
-        raise ValueError('Need a nonzero arc and at least two samples')
-    keep = np.r_[True, np.diff(distance)>0]
-    points = np.column_stack([np.interp(np.linspace(0,distance[-1],samples),distance[keep],arc[keep,i]) for i in (0,1)])
+    points = resample_arc(arc, samples)
     delta = arc[-1]-arc[0]
     width = np.linalg.norm(delta)
     if width == 0:
